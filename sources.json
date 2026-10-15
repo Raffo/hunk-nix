@@ -1,0 +1,19 @@
+{
+  "version": "0.23.0",
+  "x86_64-linux": {
+    "name": "hunkdiff-linux-x64",
+    "hash": "sha256-eatkBsuyuADnPG+8JUavuX7U+8O1Cq0HLrmtEhUVgeY="
+  },
+  "aarch64-linux": {
+    "name": "hunkdiff-linux-arm64",
+    "hash": "sha256-W4korh6YeysXddH+Yu66vMCLn8mUAVTgzvJ9JJQct+Q="
+  },
+  "x86_64-darwin": {
+    "name": "hunkdiff-darwin-x64",
+    "hash": "sha256-FMUwJct7s6/WJztlgXq3oQArH46Usk46BU6VJk4WgOA="
+  },
+  "aarch64-darwin": {
+    "name": "hunkdiff-darwin-arm64",
+    "hash": "sha256-rkLP5SeYpPUdJfY864aFyipsswOaEk1qb8FyoRL41rg="
+  }
+}

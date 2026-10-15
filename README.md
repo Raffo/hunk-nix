@@ -1,78 +1,84 @@
 # hunk-nix
 
-A non-flake Nix package for [Hunk](https://github.com/modem-dev/hunk),
-following the release-binary approach of
-[github-copilot-cli-nix](https://github.com/Raffo/github-copilot-cli-nix).
-No Node.js, Bun, or flakes required.
+A non-flake Nix package for [Hunk](https://github.com/modem-dev/hunk).
+Packages upstream release binaries, including `hunk`, `hunkdiff`, and
+the bundled agent skills. No Node.js or Bun installation required.
 
-## Build and install
+Requires Nix. Command-line installation also needs an available `<nixpkgs>`.
+Git must be on your `PATH` for Git-backed reviews.
 
-With Nix installed and `<nixpkgs>` available, run from this directory:
+## Install
+
+From this repository's directory:
 
 ```sh
-nix-build
-./result/bin/hunk --version
 nix-env -if .
+hunk --version
 ```
 
-The package exposes both `hunk` and `hunkdiff`, includes the bundled agent
-skills, and marks the installation as Nix-managed. Git must be available on
-your PATH for Git-backed reviews.
+This builds and installs the package; a separate `nix-build` is not needed.
 
-## NixOS or Home Manager
+### NixOS
 
-Add the overlay and select the package:
+Alternatively, add this to your NixOS configuration, replacing the path with
+the absolute path to this repository:
 
 ```nix
-{
-  nixpkgs.overlays = [ (import /path/to/hunk-nix/overlay.nix) ];
-  environment.systemPackages = [ pkgs.hunk ];
+{ pkgs, ... }: {
+  environment.systemPackages = [
+    (import /absolute/path/to/hunk-nix { inherit pkgs; })
+  ];
 }
 ```
 
-For Home Manager, use `home.packages = [ pkgs.hunk ];` instead of
-`environment.systemPackages`.
+Apply with `sudo nixos-rebuild switch`.
 
-You can also use the package directly, without an overlay:
+### Home Manager
+
+Add this to your Home Manager configuration, replacing the path:
 
 ```nix
-home.packages = [ (import /path/to/hunk-nix { inherit pkgs; }) ];
+{ pkgs, ... }: {
+  home.packages = [
+    (import /absolute/path/to/hunk-nix { inherit pkgs; })
+  ];
+}
 ```
+
+Apply with `home-manager switch`, or rebuild NixOS if Home Manager is
+configured as a NixOS module.
 
 ## Platforms
 
-- `x86_64-linux`
-- `aarch64-linux`
-- `x86_64-darwin`
-- `aarch64-darwin`
+Linux and macOS on x86-64 and ARM64.
 
-Intel macOS requires a nixpkgs version that still supports it, such as 25.11.
+Intel macOS requires a nixpkgs version that still supports it, such as 26.05.
 The x86-64 binaries require SSE4.2.
 
-## Updates and trust
+## Update
 
-`sources.json` pins the release version and SHA-256 hash for each archive.
-This packages upstream binaries, not a source build; it trusts Hunk's release
-publisher. Hashes prevent unexpected archive changes, but do not independently
-authenticate the publisher.
+Pull the latest changes to this repository, then repeat your install command
+or rebuild your NixOS/Home Manager configuration. The installed version is
+pinned by this repository; `hunk update` cannot replace a Nix installation.
 
-To update, change `version` and all four hashes using the new release's
-`SHA256SUMS`, check that the archive names/layout are unchanged, and rebuild.
-You can obtain a Nix hash for an individual archive with:
+## Maintainer notes
 
-```sh
-nix-prefetch-url https://github.com/modem-dev/hunk/releases/download/v<VERSION>/hunkdiff-linux-x64.tar.gz
-```
+GitHub Actions checks for stable Hunk releases every six hours, or on demand
+via **Actions > Auto-update to latest release > Run workflow** on the default
+branch. Like [github-copilot-cli-nix](https://github.com/Raffo/github-copilot-cli-nix),
+it commits updates directly to that branch, after `nix-build` passes on
+x86-64 Linux. The workflow needs permission to push to the default branch;
+branch protection rules still apply.
 
-Nix accepts the base32 hash printed by this command as well as the SRI hashes
-currently in `sources.json`. Do not use `--unpack`: these hashes cover the
-compressed archives.
+To update manually, run `bash update.sh` (requires `curl` and `jq`), then
+`nix-build`. The script updates `sources.json` using upstream's `SHA256SUMS`
+and checks that all four platform archives are published. Failed updates are
+not committed. If the upstream license changes, update its pinned hash in
+`default.nix` manually.
 
-Reinstall with `nix-env -if .`, or rebuild your NixOS/Home Manager configuration.
-`hunk update` will direct you back to Nix rather than replace this installation.
-There is no automated updater or CI in this project.
+Run `nix-build` to build and check both executables, skill discovery, and
+Nix-managed update behavior on the native platform. Run `bash tests/update.sh`
+to test the updater without network access.
 
-## Package checks
-
-Native builds run installation checks for both executable names, help output,
-skill discovery, and Nix-managed update behavior. Run them with `nix-build`.
+This package trusts upstream's binary releases. Pinned hashes detect archive
+changes; they do not independently authenticate the publisher.
