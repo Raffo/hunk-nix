@@ -1,19 +1,19 @@
 {
-  "version": "0.24.1",
+  "version": "0.25.0",
   "x86_64-linux": {
     "name": "hunkdiff-linux-x64",
-    "hash": "sha256:4b8c98f8d97745499916cc1e1d2f27ffd258c6d6358dd4532f61e41c5eb19692"
+    "hash": "sha256:fc3301151a9b35400b0223d73041cea85fb18972d6dc5c97a2bbdc427fad2afe"
   },
   "aarch64-linux": {
     "name": "hunkdiff-linux-arm64",
-    "hash": "sha256:ab49c8aba82c3c9872f1c5eefd96d1c4c2491e5b80647f97b2e81fc6c4676deb"
+    "hash": "sha256:12cf4a38ae1df282dee29fffe539134dd6943d667253a11c23b1d9ec249f1d88"
   },
   "x86_64-darwin": {
     "name": "hunkdiff-darwin-x64",
-    "hash": "sha256:8014b3eb7389c78767dc0f51ea07ff24c773fa7cd5d432811e881b3359d99489"
+    "hash": "sha256:d17f9811242e536fcbc3e7180c58f306e27ef43aad40e2e8bc730088b176c960"
   },
   "aarch64-darwin": {
     "name": "hunkdiff-darwin-arm64",
-    "hash": "sha256:5f9afd41d825e2f87958b0702e779e52d38207c0b42d5316efe54218f35b4d7d"
+    "hash": "sha256:2a577909b478242bc75982be30bc2c5ebf9a0044fc38aad94b111ab7e9a992e0"
   }
 }
